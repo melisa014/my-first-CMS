@@ -53,6 +53,11 @@
 	h2 a {
 	  text-decoration: none;
 	}
+        
+        h3.categoryDescription {
+	  margin-top: -20px;
+	  margin-bottom: 40px;
+	}
 	 
 	 
 	/* Заголовки статей */
@@ -90,6 +95,20 @@
 	 
 	#headlines.archive .summary {
 	  padding-left: 130px;
+	}
+        
+        .category {
+	  font-style: italic;
+	  font-weight: normal;
+	  font-size: 60%;
+	  color: #999;
+	  display: block;
+	  line-height: 2em;
+	}
+	  
+	.category a {
+	  color: #999;
+	  text-decoration: underline;
 	}
 	 
 	 

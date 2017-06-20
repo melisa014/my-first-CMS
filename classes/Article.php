@@ -18,6 +18,11 @@ class Article
             * @var string Полное название статьи
             */
             public $title = null;
+            
+             /**
+            * @var int ID категории статьи
+            */
+            public $categoryId = null;
 
             /**
             * @var string Краткое описание статьи
@@ -38,6 +43,7 @@ class Article
               if ( isset( $data['id'] ) ) {$this->id = (int) $data['id'];}
               if ( isset( $data['publicationDate'] ) ) {$this->publicationDate = (int) $data['publicationDate'];}
               if ( isset( $data['title'] ) ) {$this->title = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['title'] );}
+              if ( isset( $data['categoryId'] ) ) {$this->categoryId = (int) $data['categoryId'];}
               if ( isset( $data['summary'] ) ) {$this->summary = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['summary'] );}
               if ( isset( $data['content'] ) ) {$this->content = $data['content'];}
             }
@@ -86,62 +92,67 @@ class Article
 
 
             /**
-            * Возвращает все (или диапазон) объектов статей в базе данных
+            * Возвращает все (или диапазон) объекты Article из базы данных
             *
-            * @param int Optional Количество строк (по умолчанию все)
-            * @param string Optional Столбец по которому производится сортировка  статей (по умолчанию "publicationDate DESC")
-            * @return Array|false Двух элементный массив: results => массив, список объектов статей; totalRows => общее количество статей
+            * @param int Optional Количество возвращаемых строк (по умолчанию = all)
+            * @param int Optional Вернуть статьи только из категории с указанным ID
+            * @param string Optional Столбц, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
+            * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
             */
 
-            public static function getList( $numRows=1000000, $order="publicationDate DESC" ) {
-              $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-//              $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM articles
-//                      ORDER BY " . mysql_escape_string($order) . " LIMIT :numRows";
-              
-              
-                $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM articles
-                      ORDER BY " . $conn->query($order) . " LIMIT :numRows";
+            public static function getList( $numRows=1000000, $categoryId=null, $order="publicationDate DESC" ) {
+                $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+                $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
+                $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate
+                        FROM articles $categoryClause
+                        ORDER BY " . $conn->query($order) . " LIMIT :numRows";
 
-              $st = $conn->prepare( $sql );
-              $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );
-              $st->execute();
-              $list = array();
+                $st = $conn->prepare( $sql );
+                $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );
+                if ( $categoryId ) $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT );
+                $st->execute();
+                $list = array();
 
-              while ( $row = $st->fetch() ) {
-                $article = new Article( $row );
-                $list[] = $article;
-              }
+                while ( $row = $st->fetch() ) {
+                    $article = new Article( $row );
+                    $list[] = $article;
+                }
 
-              // Получаем общее количество статей, которые соответствуют критерию
-              $sql = "SELECT FOUND_ROWS() AS totalRows";
-              $totalRows = $conn->query( $sql )->fetch();
-              $conn = null;
-              return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
+                // Получаем общее количество статей, которые соответствуют критерию
+                $sql = "SELECT FOUND_ROWS() AS totalRows";
+                $totalRows = $conn->query( $sql )->fetch();
+                $conn = null;
+                return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
             }
 
-
+          
             /**
             * Вставляем текущий объект статьи в базу данных, устанавливаем его свойства.
             */
 
+           
+            /**
+            * Вставляем текущий объек Article в базу данных, устанавливаем его ID.
+            */
+
             public function insert() {
 
-              // Есть у объекта статьи ID?
-              if ( !is_null( $this->id ) ) trigger_error ( "Article::insert(): Attempt to insert an Article object that already has its ID property set (to $this->id).", E_USER_ERROR );
+                // Есть уже у объекта Article ID?
+                if ( !is_null( $this->id ) ) trigger_error ( "Article::insert(): Attempt to insert an Article object that already has its ID property set (to $this->id).", E_USER_ERROR );
 
-              // Вставляем статью
-              $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-              $sql = "INSERT INTO articles ( publicationDate, title, summary, content ) VALUES ( FROM_UNIXTIME(:publicationDate), :title, :summary, :content )";
-              $st = $conn->prepare ( $sql );
-              $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
-              $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
-              $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
-              $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
-              $st->execute();
-              $this->id = $conn->lastInsertId();
-              $conn = null;
+                // Вставляем статью
+                $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+                $sql = "INSERT INTO articles ( publicationDate, categoryId, title, summary, content ) VALUES ( FROM_UNIXTIME(:publicationDate), :categoryId, :title, :summary, :content )";
+                $st = $conn->prepare ( $sql );
+                $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
+                $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );
+                $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
+                $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
+                $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
+                $st->execute();
+                $this->id = $conn->lastInsertId();
+                $conn = null;
             }
-
 
             /**
             * Обновляем текущий объект статьи в базе данных
@@ -154,9 +165,10 @@ class Article
 
               // Обновляем статью
               $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-              $sql = "UPDATE articles SET publicationDate=FROM_UNIXTIME(:publicationDate), title=:title, summary=:summary, content=:content WHERE id = :id";
+              $sql = "UPDATE articles SET publicationDate=FROM_UNIXTIME(:publicationDate), categoryId=:categoryId, title=:title, summary=:summary, content=:content WHERE id = :id";
               $st = $conn->prepare ( $sql );
               $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
+              $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );
               $st->bindValue( ":title", $this->title, PDO::PARAM_STR );
               $st->bindValue( ":summary", $this->summary, PDO::PARAM_STR );
               $st->bindValue( ":content", $this->content, PDO::PARAM_STR );
