@@ -30,12 +30,17 @@
 	  * @param assoc Значения свойств
 	  */
 	  
-	  public function __construct( $data=array() ) {
+	  /*public function __construct( $data=array() ) {
 	    if ( isset( $data['id'] ) ) $this->id = (int) $data['id'];
 	    if ( isset( $data['name'] ) ) $this->name = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['name'] );
 	    if ( isset( $data['description'] ) ) $this->description = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['description'] );
+	  }*/
+          
+	  public function __construct( $data=array() ) {
+	    if ( isset( $data['id'] ) ) $this->id = (int) $data['id'];
+	    if ( isset( $data['name'] ) ) $this->name = $data['name'];
+	    if ( isset( $data['description'] ) ) $this->description = $data['description'];
 	  }
-	  
 	  
 	  /**
 	  * Устанавливаем свойства объекта с использованием значений из формы редактирования
@@ -82,9 +87,11 @@
 //	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
 //	            ORDER BY " . mysql_escape_string($order) . " LIMIT :numRows";
             
-            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
-	            ORDER BY " .$conn->query($order) . " LIMIT :numRows";
+//            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
+//	            ORDER BY " .$conn->query($order) . " LIMIT :numRows";
             
+            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
+	            ORDER BY $order LIMIT :numRows";
 	  
 	    $st = $conn->prepare( $sql );
 	    $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );

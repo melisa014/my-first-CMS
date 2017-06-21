@@ -1,10 +1,14 @@
 <?php include "templates/include/header.php" ?>
 <?php include "templates/admin/include/header.php" ?>
-	  
+<!--        <?php echo "<pre>";
+            print_r($results);
+            print_r($data);
+        echo "<pre>"; ?> Данные о массиве $results и типе формы передаются корректно-->
+
         <h1><?php echo $results['pageTitle']?></h1>
 
         <form action="admin.php?action=<?php echo $results['formAction']?>" method="post">
-            <input type="hidden" name="articleId" value="<?php echo $results['article']->id ?>"/>
+            <input type="hidden" name="articleId" value="<?php echo $results['article']->id ?>">
 
     <?php if ( isset( $results['errorMessage'] ) ) { ?>
             <div class="errorMessage"><?php echo $results['errorMessage'] ?></div>

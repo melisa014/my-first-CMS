@@ -87,10 +87,18 @@ function newArticle() {
     $results['formAction'] = "newArticle";
 
     if ( isset( $_POST['saveChanges'] ) ) {
-
+//            echo "<pre>";
+//            print_r($results);
+//            print_r($_POST);
+//            echo "<pre>";
+//            В $_POST данные о статье сохраняются корректно
         // Пользователь получает форму редактирования статьи: сохраняем новую статью
-        $article = new Article;
+        $article = new Article();
         $article->storeFormValues( $_POST );
+//            echo "<pre>";
+//            print_r($article);
+//            echo "<pre>";
+//            А здесь данные массива $article уже неполные(есть только Число от даты, категория и полный текст статьи)          
         $article->insert();
         header( "Location: admin.php?status=changesSaved" );
 

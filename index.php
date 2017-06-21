@@ -48,6 +48,16 @@ function homepage() {
     $data = Article::getList( HOMEPAGE_NUM_ARTICLES );
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
+    
+//    echo "<pre>"; 
+//    print_r ($results['articles'][2]->publicationDate);
+//    echo "</pre>";  
+    //Обращаемся к дате массива $results. Дата = 0
+    
+//    echo "<pre>";
+//    print_r($results);
+//    echo "</pre>";
+//    Здесь массив $results пустой
     $data = Category::getList();
     $results['categories'] = array();
     foreach ( $data['results'] as $category ) $results['categories'][$category->id] = $category;

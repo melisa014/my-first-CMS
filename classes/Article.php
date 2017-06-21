@@ -39,12 +39,25 @@ class Article
             * @param assoc Значения свойств
             */
 
+            /*
             public function __construct( $data=array() ) {
               if ( isset( $data['id'] ) ) {$this->id = (int) $data['id'];}
               if ( isset( $data['publicationDate'] ) ) {$this->publicationDate = (int) $data['publicationDate'];}
               if ( isset( $data['title'] ) ) {$this->title = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['title'] );}
               if ( isset( $data['categoryId'] ) ) {$this->categoryId = (int) $data['categoryId'];}
               if ( isset( $data['summary'] ) ) {$this->summary = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['summary'] );}
+              if ( isset( $data['content'] ) ) {$this->content = $data['content'];}
+            }*/
+            
+            public function __construct( $data=array() ) {
+              if ( isset( $data['id'] ) ) {$this->id = (int) $data['id'];}
+              if ( isset( $data['publicationDate'] ) ) {$this->publicationDate = (string) $data['publicationDate'];}
+              
+              //die(print_r($this->publicationDate));
+              
+              if ( isset( $data['title'] ) ) {$this->title = $data['title'];}
+              if ( isset( $data['categoryId'] ) ) {$this->categoryId = (int) $data['categoryId'];}
+              if ( isset( $data['summary'] ) ) {$this->summary = $data['summary'];}
               if ( isset( $data['content'] ) ) {$this->content = $data['content'];}
             }
 	 
@@ -100,17 +113,32 @@ class Article
             * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
             */
 
+//            public static function getList( $numRows=1000000, $categoryId=null, $order="publicationDate DESC" ) {
+//                $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+//                $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
+//                $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate
+//                        FROM articles $categoryClause
+//                        ORDER BY " . $conn->query($order) . " LIMIT :numRows";
+
             public static function getList( $numRows=1000000, $categoryId=null, $order="publicationDate DESC" ) {
                 $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
                 $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
                 $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate
                         FROM articles $categoryClause
-                        ORDER BY " . $conn->query($order) . " LIMIT :numRows";
-
+                        ORDER BY  $order  LIMIT :numRows";
+                
                 $st = $conn->prepare( $sql );
+//                        echo "<pre>";
+//                        print_r($st);
+//                        echo "</pre>";
+//                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
                 $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );
                 if ( $categoryId ) $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT );
                 $st->execute();
+//                        echo "<pre>";
+//                        print_r($st);
+//                        echo "</pre>";
+//                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
                 $list = array();
 
                 while ( $row = $st->fetch() ) {

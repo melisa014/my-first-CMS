@@ -19,6 +19,8 @@
               <th>Category</th>
             </tr>
 
+<!--<?php echo "<pre>"; print_r ($results['articles'][2]->publicationDate); echo "</pre>"; ?> Обращаемся к дате массива $results. Дата = 0 -->
+            
     <?php foreach ( $results['articles'] as $article ) { ?>
 
             <tr onclick="location='admin.php?action=editArticle&amp;articleId=<?php echo $article->id?>'">
@@ -27,7 +29,18 @@
                 <?php echo $article->title?>
               </td>
               <td>
-                <?php echo $results['categories'][$article->categoryId]->name?>
+                  
+             <!--   <?php echo $results['categories'][$article->categoryId]->name?> Эта строка была скопирована с сайта-->
+             <!-- <?php echo "<pre>"; print_r ($article); echo "</pre>"; ?> Здесь объект $article содержит в себе только ID категории. А надо по ID достать название категории-->
+            <!--<?php echo "<pre>"; print_r ($results); echo "</pre>"; ?> Здесь есть доступ к полному объекту $results -->
+             
+                <?php 
+                if($article->categoryId) {
+                    echo $results['categories'][$article->categoryId]->name;                        
+                }
+                else {
+                echo "Без категории";
+                }?>
               </td>
             </tr>
 
