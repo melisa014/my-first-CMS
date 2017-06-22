@@ -62,7 +62,13 @@ function homepage() {
     $results['categories'] = array();
     foreach ( $data['results'] as $category ) $results['categories'][$category->id] = $category;
     $results['pageTitle'] = "Widget News";
+//    echo "<pre>";
+//    print_r($results);
+//    echo "</pre>";
+    // Здесб есть всего 5 записей, исключая ту, у которой нет категории
     require( TEMPLATE_PATH . "/homepage.php" );
+    
+    
 }
 	  
 	

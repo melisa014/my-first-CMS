@@ -36,6 +36,11 @@
 	  padding: 20px 0 0 0;
 	  font-size: .8em;
 	}
+        
+        #loader-identity {
+            display : none;
+            float : right;
+        }
 	 
 	 
 	/* Заголвки */
@@ -110,6 +115,11 @@
 	  color: #999;
 	  text-decoration: underline;
 	}
+        
+        .showContent {
+            font-size : 14px;
+            float : right;
+        }
 	 
 	 
 	/* Заголовок для страницы администратора */
