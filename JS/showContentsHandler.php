@@ -1,11 +1,30 @@
 <?php
-require ('C:\OpenServer\domains\firstCMS\config.php');
+require ('../config.php');
 
-$query_result = Article::getById($_GET['articleId']);
-echo $query_result->content;
-
-
-//echo "<pre>";
-//print_r ($query_result);
-//echo "</pre>";
+if (isset($_GET['articleId'])) {
+    $article = Article::getById((int)$_GET['articleId']);
+    echo $article->content;
+}
+if (isset ($_POST['articleId'])) {
+    die("Привет)");
+    $article = Article::getById((int)$_POST['articleId']);
+    echo json_encode($article);
+//        die("Привет)");
+//    $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+//    
+//        if (isset($conn)) {
+//            die("Соединенте установлено");
+//        }
+//        else {
+//            die("Соединение не установлено");
+//        }
+//    $article = "WHERE Id=". (int)$_POST[articleId];
+//    echo $article;
+//    $sql = "SELECT content FROM articles". $article;
+//    $contentFromDb = $conn->prepare( $sql );
+//    $contentFromDb->execute();
+//    $result = $contentFromDb->fetch();
+//    $conn = null;
+//    echo json_encode($result);
+}
 

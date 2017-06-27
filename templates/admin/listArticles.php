@@ -35,7 +35,7 @@
             <!--<?php echo "<pre>"; print_r ($results); echo "</pre>"; ?> Здесь есть доступ к полному объекту $results -->
              
                 <?php 
-                if($article->categoryId) {
+                if(isset ($article->categoryId)) {
                     echo $results['categories'][$article->categoryId]->name;                        
                 }
                 else {
