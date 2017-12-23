@@ -4,14 +4,14 @@
 ## Как развернуть:
 
    1) Клонируем репозиторий на свой компьютер:
-        в директории /var/www/ в терминале вводим git clone git@github.com:melisa014/my-first-CMS.git
+        - в директории /var/www/ в терминале вводим git clone git@github.com:melisa014/my-first-CMS.git
 
    2) Создаём виртуальных хост: http://fkn.ktu10.com/?q=node/8593
 
    3) Открываем проект в своей программе для разработки (например, NetBeans)
 
    4) Разворачиваем дамп базы данных db_cms.sql
-        так: http://fkn.ktu10.com/?q=node/8944
+        - так: http://fkn.ktu10.com/?q=node/8944
 
    5) И прописываем в файле config.php Ваши db_username и db_password
 
