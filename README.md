@@ -4,7 +4,10 @@
 ## Как развернуть:
 
    1) Клонируем репозиторий на свой компьютер:
-        - в директории /var/www/ в терминале вводим git clone git@github.com:melisa014/my-first-CMS.git
+        - в директории /var/www/ в терминале вводим 
+```
+git clone git@github.com:it-for-free/my-first-cms.git
+```
 
    2) Создаём виртуальных хост: http://fkn.ktu10.com/?q=node/8593
 
