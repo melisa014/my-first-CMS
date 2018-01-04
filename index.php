@@ -1,5 +1,7 @@
 <?php
 
+//phpinfo(); die();
+
 require( "config.php" );
 $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 
