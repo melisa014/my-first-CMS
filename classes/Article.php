@@ -1,6 +1,9 @@
 <?php
-	// Класс для обработки статей
 
+
+/**
+ * Класс для обработки статей
+ */
 class Article
 {
     // Свойства
@@ -67,7 +70,6 @@ class Article
     *
     * @param assoc Значения записи формы
     */
-
     public function storeFormValues ( $params ) {
 
       // Сохраняем все параметры
@@ -162,7 +164,6 @@ class Article
     /**
     * Вставляем текущий объек Article в базу данных, устанавливаем его ID.
     */
-
     public function insert() {
 
         // Есть уже у объекта Article ID?
@@ -185,7 +186,6 @@ class Article
     /**
     * Обновляем текущий объект статьи в базе данных
     */
-
     public function update() {
 
       // Есть ли у объекта статьи ID?
@@ -209,7 +209,6 @@ class Article
     /**
     * Удаляем текущий объект статьи из базы данных
     */
-
     public function delete() {
 
       // Есть ли у объекта статьи ID?
