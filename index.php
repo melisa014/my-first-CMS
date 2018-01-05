@@ -2,11 +2,11 @@
 
 //phpinfo(); die();
 
-require( "config.php" );
-$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+require("config.php");
+$action = isset($_GET['action']) ? $_GET['action'] : "";
 
 
-switch ( $action ) {
+switch ($action) {
   case 'archive':
     archive();
     break;
@@ -17,7 +17,8 @@ switch ( $action ) {
     homepage();
 }
 
-function archive() {
+function archive() 
+{
     $results = [];
     
     $categoryId = ( isset( $_GET['categoryId'] ) && $_GET['categoryId'] ) ? (int)$_GET['categoryId'] : null;
@@ -42,7 +43,9 @@ function archive() {
     require( TEMPLATE_PATH . "/archive.php" );
 }
 
-function viewArticle() {
+function viewArticle() 
+{
+    
     if ( !isset($_GET["articleId"]) || !$_GET["articleId"] ) {
       homepage();
       return;
@@ -55,9 +58,11 @@ function viewArticle() {
     require( TEMPLATE_PATH . "/viewArticle.php" );
 }
 
-function homepage() {
+function homepage() 
+{
+
     $results = array();
-    $data = Article::getList( HOMEPAGE_NUM_ARTICLES );
+    $data = Article::getList(HOMEPAGE_NUM_ARTICLES);
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
     
@@ -71,6 +76,6 @@ function homepage() {
 //    echo "</pre>";
 //    die();
     
-    require( TEMPLATE_PATH . "/homepage.php" );
+    require(TEMPLATE_PATH . "/homepage.php");
     
 }
