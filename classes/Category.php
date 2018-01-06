@@ -74,41 +74,41 @@
 	  }
 	  
 	  
-	  /**
-	  * Возвращаем все (или диапазон) объектов Category из базы данных
-	  *
-	  * @param int Optional Количество возвращаемых строк (по умолчаниюt = all)
-	  * @param string Optional Столбец, по которому сортируются категории(по умолчанию = "name ASC")
-	  * @return Array|false Двух элементный массив: results => массив с объектами Category; totalRows => общее количество категорий
-	  */
-	  
-	  public static function getList( $numRows=1000000, $order="name ASC" ) {
-	    $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+        /**
+        * Возвращаем все (или диапазон) объектов Category из базы данных
+        *
+        * @param int Optional Количество возвращаемых строк (по умолчаниюt = all)
+        * @param string Optional Столбец, по которому сортируются категории(по умолчанию = "name ASC")
+        * @return Array|false Двух элементный массив: results => массив с объектами Category; totalRows => общее количество категорий
+        */
+        public static function getList( $numRows=1000000, $order="name ASC" ) 
+        {
+          $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
 //	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
 //	            ORDER BY " . mysql_escape_string($order) . " LIMIT :numRows";
-            
+
 //            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
 //	            ORDER BY " .$conn->query($order) . " LIMIT :numRows";
-            
-            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
-	            ORDER BY $order LIMIT :numRows";
-	  
-	    $st = $conn->prepare( $sql );
-	    $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );
-	    $st->execute();
-	    $list = array();
-	  
-	    while ( $row = $st->fetch() ) {
-	      $category = new Category( $row );
-	      $list[] = $category;
-	    }
-	  
-	    // Получаем общее количество категорий, которые соответствуют критериям
-	    $sql = "SELECT FOUND_ROWS() AS totalRows";
-	    $totalRows = $conn->query( $sql )->fetch();
-	    $conn = null;
-	    return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
-	  }
+
+          $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
+                  ORDER BY $order LIMIT :numRows";
+
+          $st = $conn->prepare( $sql );
+          $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );
+          $st->execute();
+          $list = array();
+
+          while ( $row = $st->fetch() ) {
+            $category = new Category( $row );
+            $list[] = $category;
+          }
+
+          // Получаем общее количество категорий, которые соответствуют критериям
+          $sql = "SELECT FOUND_ROWS() AS totalRows";
+          $totalRows = $conn->query( $sql )->fetch();
+          $conn = null;
+          return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
+        }
 	  
 	  
 	  /**

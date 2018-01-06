@@ -5,7 +5,6 @@
 require("config.php");
 $action = isset($_GET['action']) ? $_GET['action'] : "";
 
-
 switch ($action) {
   case 'archive':
     archive();
@@ -58,9 +57,11 @@ function viewArticle()
     require( TEMPLATE_PATH . "/viewArticle.php" );
 }
 
+/**
+ * Вывод домашней ("главной") страницы сайта
+ */
 function homepage() 
 {
-
     $results = array();
     $data = Article::getList(HOMEPAGE_NUM_ARTICLES);
     $results['articles'] = $data['results'];
@@ -68,8 +69,11 @@ function homepage()
     
     $data = Category::getList();
     $results['categories'] = array();
-    foreach ( $data['results'] as $category ) $results['categories'][$category->id] = $category;
-    $results['pageTitle'] = "Widget News";
+    foreach ( $data['results'] as $category ) { 
+        $results['categories'][$category->id] = $category;
+    } 
+    
+    $results['pageTitle'] = "Простая CMS на PHP";
     
 //    echo "<pre>";
 //    print_r($data);

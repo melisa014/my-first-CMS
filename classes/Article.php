@@ -51,17 +51,40 @@ class Article
       if ( isset( $data['summary'] ) ) {$this->summary = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['summary'] );}
       if ( isset( $data['content'] ) ) {$this->content = $data['content'];}
     }*/
-
-    public function __construct( $data=array() ) {
-      if ( isset( $data['id'] ) ) {$this->id = (int) $data['id'];}
-      if ( isset( $data['publicationDate'] ) ) {$this->publicationDate = (string) $data['publicationDate'];}
+    
+    /**
+     * Создаст объект статьи
+     * 
+     * @param array $data массив значений (столбцов) строки таблицы статей
+     */
+    public function __construct($data=array())
+    {
+        
+      if (isset($data['id'])) {
+          $this->id = (int) $data['id'];
+      }
+      
+      if (isset( $data['publicationDate'])) {
+          $this->publicationDate = (string) $data['publicationDate'];     
+      }
 
       //die(print_r($this->publicationDate));
 
-      if ( isset( $data['title'] ) ) {$this->title = $data['title'];}
-      if ( isset( $data['categoryId'] ) ) {$this->categoryId = (int) $data['categoryId'];}
-      if ( isset( $data['summary'] ) ) {$this->summary = $data['summary'];}
-      if ( isset( $data['content'] ) ) {$this->content = $data['content'];}
+      if (isset($data['title'])) {
+          $this->title = $data['title'];        
+      }
+      
+      if (isset($data['categoryId'])) {
+          $this->categoryId = (int) $data['categoryId'];      
+      }
+      
+      if (isset($data['summary'])) {
+          $this->summary = $data['summary'];         
+      }
+      
+      if (isset($data['content'])) {
+          $this->content = $data['content'];  
+      }
     }
 
 
@@ -109,50 +132,53 @@ class Article
     /**
     * Возвращает все (или диапазон) объекты Article из базы данных
     *
-    * @param int Optional Количество возвращаемых строк (по умолчанию = all)
-    * @param int Optional Вернуть статьи только из категории с указанным ID
-    * @param string Optional Столбц, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
+    * @param int $numRows Количество возвращаемых строк (по умолчанию = 1000000)
+    * @param int $categoryId Вернуть статьи только из категории с указанным ID
+    * @param string $order Столбец, по которому выполняется сортировка статей (по умолчанию = "publicationDate DESC")
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
-
-//            public static function getList( $numRows=1000000, $categoryId=null, $order="publicationDate DESC" ) {
-//                $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-//                $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
-//                $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate
-//                        FROM articles $categoryClause
-//                        ORDER BY " . $conn->query($order) . " LIMIT :numRows";
-
-    public static function getList( $numRows=1000000, $categoryId=null, $order="publicationDate DESC" ) {
-        $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+    public static function getList($numRows=1000000, 
+            $categoryId=null, $order="publicationDate DESC") 
+    {
+        $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) AS publicationDate
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) 
+                AS publicationDate
                 FROM articles $categoryClause
                 ORDER BY  $order  LIMIT :numRows";
-
-        $st = $conn->prepare( $sql );
+        
+        $st = $conn->prepare($sql);
 //                        echo "<pre>";
 //                        print_r($st);
 //                        echo "</pre>";
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
-        $st->bindValue( ":numRows", $numRows, PDO::PARAM_INT );
-        if ( $categoryId ) $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT );
-        $st->execute();
+        $st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
+        
+        if ($categoryId) 
+            $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
+        
+        $st->execute(); // выполняем запрос к базе данных
 //                        echo "<pre>";
 //                        print_r($st);
 //                        echo "</pre>";
 //                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $list = array();
 
-        while ( $row = $st->fetch() ) {
-            $article = new Article( $row );
+        while ($row = $st->fetch()) {
+            $article = new Article($row);
             $list[] = $article;
         }
 
         // Получаем общее количество статей, которые соответствуют критерию
         $sql = "SELECT FOUND_ROWS() AS totalRows";
-        $totalRows = $conn->query( $sql )->fetch();
+        $totalRows = $conn->query($sql)->fetch();
         $conn = null;
-        return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
+        
+        return (array(
+            "results" => $list, 
+            "totalRows" => $totalRows[0]
+            ) 
+        );
     }
 
 

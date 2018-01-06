@@ -33,6 +33,6 @@
     <?php } ?>
     </ul>
     <p><a href="./?action=archive">Article Archive</a></p>
-    <?php include "templates/include/footer.php" ?>
+<?php include "templates/include/footer.php" ?>
 
     
