@@ -42,19 +42,24 @@ function archive()
     require( TEMPLATE_PATH . "/archive.php" );
 }
 
+/**
+ * Загрузка страницы с конкретной статьёй
+ * 
+ * @return null
+ */
 function viewArticle() 
-{
-    
+{   
     if ( !isset($_GET["articleId"]) || !$_GET["articleId"] ) {
       homepage();
       return;
     }
 
     $results = array();
-    $results['article'] = Article::getById( (int)$_GET["articleId"] );
-    $results['category'] = Category::getById( $results['article']->categoryId );
-    $results['pageTitle'] = $results['article']->title . " | Widget News";
-    require( TEMPLATE_PATH . "/viewArticle.php" );
+    $results['article'] = Article::getById((int)$_GET["articleId"]);
+    $results['category'] = Category::getById($results['article']->categoryId);
+    $results['pageTitle'] = $results['article']->title . " | Простая CMS";
+    
+    require(TEMPLATE_PATH . "/viewArticle.php");
 }
 
 /**

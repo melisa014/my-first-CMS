@@ -8,12 +8,12 @@
     <?php if ( $results['category'] ) { ?>
         in 
         <a href="./?action=archive&amp;categoryId=<?php echo $results['category']->id?>">
-            <?php echo htmlspecialchars( $results['category']->name ) ?>
+            <?php echo htmlspecialchars($results['category']->name) ?>
         </a>
     <?php } ?>
         
     </p>
 
-    <p><a href="./">Return to Homepage</a></p>
+    <p><a href="./">Вернуться на главную страницу</a></p>
 	  
 <?php include "templates/include/footer.php" ?>              

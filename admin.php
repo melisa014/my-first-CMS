@@ -5,12 +5,12 @@ session_start();
 $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 $username = isset( $_SESSION['username'] ) ? $_SESSION['username'] : "";
 
-if ( $action != "login" && $action != "logout" && !$username ) {
+if ($action != "login" && $action != "logout" && !$username) {
     login();
     exit;
 }
 
-switch ( $action ) {
+switch ($action) {
     case 'login':
         login();
         break;
@@ -42,13 +42,15 @@ switch ( $action ) {
         listArticles();
 }
 
-
+/**
+ * Авторизация пользователя (админа) -- установка значения в сессию
+ */
 function login() {
 
     $results = array();
     $results['pageTitle'] = "Admin Login | Widget News";
 
-    if ( isset( $_POST['login'] ) ) {
+    if (isset( $_POST['login'])) {
 
         // Пользователь получает форму входа: попытка авторизировать пользователя
 
@@ -56,7 +58,7 @@ function login() {
 
           // Вход прошел успешно: создаем сессию и перенаправляем на страницу администратора
           $_SESSION['username'] = ADMIN_USERNAME;
-          header( "Location: admin.php" );
+          header( "Location: admin.php");
 
         } else {
 
@@ -117,6 +119,11 @@ function newArticle() {
 }
 
 
+/**
+ * Редактирование статьи
+ * 
+ * @return null
+ */
 function editArticle() {
 	  
     $results = array();
