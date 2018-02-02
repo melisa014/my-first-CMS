@@ -1,9 +1,9 @@
 <?php
 
-require( "config.php" );
+require("config.php");
 session_start();
-$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
-$username = isset( $_SESSION['username'] ) ? $_SESSION['username'] : "";
+$action = isset($_GET['action']) ? $_GET['action'] : "";
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 
 if ($action != "login" && $action != "logout" && !$username) {
     login();
@@ -50,11 +50,12 @@ function login() {
     $results = array();
     $results['pageTitle'] = "Admin Login | Widget News";
 
-    if (isset( $_POST['login'])) {
+    if (isset($_POST['login'])) {
 
         // Пользователь получает форму входа: попытка авторизировать пользователя
 
-        if ( $_POST['username'] == ADMIN_USERNAME && $_POST['password'] == ADMIN_PASSWORD ) {
+        if ($_POST['username'] == ADMIN_USERNAME 
+                && $_POST['password'] == ADMIN_PASSWORD) {
 
           // Вход прошел успешно: создаем сессию и перенаправляем на страницу администратора
           $_SESSION['username'] = ADMIN_USERNAME;
@@ -63,14 +64,14 @@ function login() {
         } else {
 
           // Ошибка входа: выводим сообщение об ошибке для пользователя
-          $results['errorMessage'] = "Incorrect username or password. Please try again.";
+          $results['errorMessage'] = "Неправильный пароль, попробуйте ещё раз.";
           require( TEMPLATE_PATH . "/admin/loginForm.php" );
         }
 
     } else {
 
       // Пользователь еще не получил форму: выводим форму
-      require( TEMPLATE_PATH . "/admin/loginForm.php" );
+      require(TEMPLATE_PATH . "/admin/loginForm.php");
     }
 
 }
@@ -130,7 +131,7 @@ function editArticle() {
     $results['pageTitle'] = "Edit Article";
     $results['formAction'] = "editArticle";
 
-    if ( isset( $_POST['saveChanges'] ) ) {
+    if (isset($_POST['saveChanges'])) {
 
         // Пользователь получил форму редактирования статьи: сохраняем изменения
         if ( !$article = Article::getById( (int)$_POST['articleId'] ) ) {
@@ -149,10 +150,10 @@ function editArticle() {
     } else {
 
         // Пользвоатель еще не получил форму редактирования: выводим форму
-        $results['article'] = Article::getById( (int)$_GET['articleId'] );
+        $results['article'] = Article::getById((int)$_GET['articleId']);
         $data = Category::getList();
         $results['categories'] = $data['results'];
-        require( TEMPLATE_PATH . "/admin/editArticle.php" );
+        require(TEMPLATE_PATH . "/admin/editArticle.php");
     }
 
 }
@@ -172,24 +173,34 @@ function deleteArticle() {
 
 function listArticles() {
     $results = array();
+    
     $data = Article::getList();
     $results['articles'] = $data['results'];
     $results['totalRows'] = $data['totalRows'];
+    
     $data = Category::getList();
     $results['categories'] = array();
-    foreach ( $data['results'] as $category ) $results['categories'][$category->id] = $category;
-    $results['pageTitle'] = "All Articles";
+    foreach ($data['results'] as $category) { 
+        $results['categories'][$category->id] = $category;
+    }
+    
+    $results['pageTitle'] = "Все статьи";
 
-    if ( isset( $_GET['error'] ) ) {
-        if ( $_GET['error'] == "articleNotFound" ) $results['errorMessage'] = "Error: Article not found.";
+    if (isset($_GET['error'])) { // вывод сообщения об ошибке (если есть)
+        if ($_GET['error'] == "articleNotFound") 
+            $results['errorMessage'] = "Error: Article not found.";
     }
 
-    if ( isset( $_GET['status'] ) ) {
-        if ( $_GET['status'] == "changesSaved" ) $results['statusMessage'] = "Your changes have been saved.";
-        if ( $_GET['status'] == "articleDeleted" ) $results['statusMessage'] = "Article deleted.";
+    if (isset($_GET['status'])) { // вывод сообщения (если есть)
+        if ($_GET['status'] == "changesSaved") {
+            $results['statusMessage'] = "Your changes have been saved.";
+        }
+        if ($_GET['status'] == "articleDeleted")  {
+            $results['statusMessage'] = "Article deleted.";
+        }
     }
 
-    require( TEMPLATE_PATH . "/admin/listArticles.php" );
+    require(TEMPLATE_PATH . "/admin/listArticles.php" );
 }
 
 function listCategories() {

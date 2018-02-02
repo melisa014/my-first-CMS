@@ -220,11 +220,16 @@ class Article
     public function update() {
 
       // Есть ли у объекта статьи ID?
-      if ( is_null( $this->id ) ) trigger_error ( "Article::update(): Attempt to update an Article object that does not have its ID property set.", E_USER_ERROR );
+      if ( is_null( $this->id ) ) trigger_error ( "Article::update(): "
+              . "Attempt to update an Article object "
+              . "that does not have its ID property set.", E_USER_ERROR );
 
       // Обновляем статью
       $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-      $sql = "UPDATE articles SET publicationDate=FROM_UNIXTIME(:publicationDate), categoryId=:categoryId, title=:title, summary=:summary, content=:content WHERE id = :id";
+      $sql = "UPDATE articles SET publicationDate=FROM_UNIXTIME(:publicationDate),"
+              . " categoryId=:categoryId, title=:title, summary=:summary,"
+              . " content=:content WHERE id = :id";
+      
       $st = $conn->prepare ( $sql );
       $st->bindValue( ":publicationDate", $this->publicationDate, PDO::PARAM_INT );
       $st->bindValue( ":categoryId", $this->categoryId, PDO::PARAM_INT );

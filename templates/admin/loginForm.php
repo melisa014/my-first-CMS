@@ -22,7 +22,7 @@
         </ul>
 
         <div class="buttons">
-            <input type="submit" name="login" value="Login" />
+            <input type="submit" name="login" value="Войти" />
         </div>
 
     </form>
