@@ -16,4 +16,5 @@
 
     <p><a href="./">Вернуться на главную страницу</a></p>
 	  
-<?php include "templates/include/footer.php" ?>              
+<?php include "templates/include/footer.php" ?>    
+                

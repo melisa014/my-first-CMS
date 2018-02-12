@@ -3,17 +3,29 @@
 //phpinfo(); die();
 
 require("config.php");
-$action = isset($_GET['action']) ? $_GET['action'] : "";
 
-switch ($action) {
-  case 'archive':
-    archive();
-    break;
-  case 'viewArticle':
-    viewArticle();
-    break;
-  default:
-    homepage();
+try {
+    initApplication();
+} catch (Exception $e) { 
+    $results['errorMessage'] = $e->getMessage();
+    require(TEMPLATE_PATH . "/viewErrorPage.php");
+}
+
+
+function initApplication()
+{
+    $action = isset($_GET['action']) ? $_GET['action'] : "";
+
+    switch ($action) {
+        case 'archive':
+          archive();
+          break;
+        case 'viewArticle':
+          viewArticle();
+          break;
+        default:
+          homepage();
+    }
 }
 
 function archive() 
@@ -55,7 +67,13 @@ function viewArticle()
     }
 
     $results = array();
-    $results['article'] = Article::getById((int)$_GET["articleId"]);
+    $articleId = (int)$_GET["articleId"];
+    $results['article'] = Article::getById($articleId);
+    
+    if (!$results['article']) {
+        throw new Exception("Статья с id = $articleId не найдена");
+    }
+    
     $results['category'] = Category::getById($results['article']->categoryId);
     $results['pageTitle'] = $results['article']->title . " | Простая CMS";
     
