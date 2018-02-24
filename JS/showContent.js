@@ -1,11 +1,13 @@
 $(function(){
-    //init_get();
+    
+    console.log('Привет, это страый js ))');
+    init_get();
     init_post();
 });
 
 function init_get() 
 {
-    $('a.showContent').one('click', function(){
+    $('a.ajaxArticleBodyByGet').one('click', function(){
         var contentId = $(this).attr('data-contentId');
         console.log('ID статьи = ', contentId); 
         showLoaderIdentity();
@@ -25,7 +27,7 @@ function init_get()
             console.log('ajaxError status:', status);
             console.log('ajaxError error:', error);
     
-            console.log('Ошибка соединения с сервером (GET)');
+            console.log('Ошибка соединения при получении данных (GET)');
         });
         
         return false;
@@ -35,7 +37,7 @@ function init_get()
 
 function init_post() 
 {
-    $('a.showContentPOSTmethod').one('click', function(){
+    $('a.ajaxArticleBodyByPost').one('click', function(){
         var content = $(this).attr('data-contentId');
         showLoaderIdentity();
         $.ajax({
