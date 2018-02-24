@@ -10,17 +10,22 @@ function init_get()
         console.log('ID статьи = ', contentId); 
         showLoaderIdentity();
         $.ajax({
-            url:'JS/showContentsHandler.php?articleId=' + contentId, 
-            dataType: 'text'
+            url:'/ajax/showContentsHandler.php?articleId=' + contentId, 
+            dataType: 'json'
         })
         .done (function(obj){
             hideLoaderIdentity();
             console.log('Ответ получен');
             $('li.' + contentId).append(obj);
         })
-        .fail(function(){
+        .fail(function(xhr, status, error){
             hideLoaderIdentity();
-            console.log('Ошибка соединения с сервером');
+    
+            console.log('ajaxError xhr:', xhr); // выводим значения переменных
+            console.log('ajaxError status:', status);
+            console.log('ajaxError error:', error);
+    
+            console.log('Ошибка соединения с сервером (GET)');
         });
         
         return false;
@@ -34,19 +39,24 @@ function init_post()
         var content = $(this).attr('data-contentId');
         showLoaderIdentity();
         $.ajax({
-            url:'JS/showContentsHandler.php', 
-            dataType: 'json',
+            url:'/ajax/showContentsHandler.php', 
+            dataType: 'text',
 //            converters: 'json text',
             method: 'POST'
         })
         .done (function(obj){
             hideLoaderIdentity();
-            console.log('Ответ получен');
+            console.log('Ответ получен', obj);
             $('li.' + content).append(obj);
         })
-        .fail(function(){
+        .fail(function(xhr, status, error){
             hideLoaderIdentity();
-            console.log('Ошибка соединения с сервером');
+    
+    
+            console.log('Ошибка соединения с сервером (POST)');
+            console.log('ajaxError xhr:', xhr); // выводим значения переменных
+            console.log('ajaxError status:', status);
+            console.log('ajaxError error:', error);
         });
         
         return false;
