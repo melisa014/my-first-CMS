@@ -84,17 +84,15 @@ class Category
     * @return Array|false Двух элементный массив: results => массив с объектами Category; totalRows => общее количество категорий
     */
     public static function getList( $numRows=1000000, $order="name ASC" ) 
-    {
-    $fromTable = "FROM categories";    
-        
+    { 
     $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
     //	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
     //	            ORDER BY " . mysql_escape_string($order) . " LIMIT :numRows";
 
     //            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
     //	            ORDER BY " .$conn->query($order) . " LIMIT :numRows";
-
-    $sql = "SELECT * $fromTable
+    $fromPart = "FROM categories";
+    $sql = "SELECT * $fromPart
             ORDER BY $order LIMIT :numRows";
 
     $st = $conn->prepare( $sql );
@@ -108,7 +106,7 @@ class Category
     }
 
     // Получаем общее количество категорий, которые соответствуют критериям
-    $sql = "SELECT COUNT(*) AS totalRows $fromTable";
+    $sql = "SELECT COUNT(*) AS totalRows $fromPart";
     $totalRows = $conn->query( $sql )->fetch();
     $conn = null;
     return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );

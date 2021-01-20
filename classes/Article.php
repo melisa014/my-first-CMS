@@ -144,13 +144,12 @@ class Article
     public static function getList($numRows=1000000, 
             $categoryId=null, $order="publicationDate DESC") 
     {
-        $fromTable = "FROM articles";
-        
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
+        $fromPart = "FROM articles";
         $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
         $sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) 
                 AS publicationDate
-                $fromTable $categoryClause
+                $fromPart $categoryClause
                 ORDER BY  $order  LIMIT :numRows";
         
         $st = $conn->prepare($sql);
@@ -176,7 +175,7 @@ class Article
         }
 
         // Получаем общее количество статей, которые соответствуют критерию
-        $sql = "SELECT COUNT(*) AS totalRows $fromTable $categoryClause";
+        $sql = "SELECT COUNT(*) AS totalRows $fromPart $categoryClause";
         $totalRows = $conn->query($sql)->fetch();
         $conn = null;
         
