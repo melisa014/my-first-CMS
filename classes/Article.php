@@ -146,7 +146,7 @@ class Article
     {
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *, UNIX_TIMESTAMP(publicationDate) 
+        $sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) 
                 AS publicationDate
                 FROM articles $categoryClause
                 ORDER BY  $order  LIMIT :numRows";
@@ -174,7 +174,7 @@ class Article
         }
 
         // Получаем общее количество статей, которые соответствуют критерию
-        $sql = "SELECT FOUND_ROWS() AS totalRows";
+        $sql = "SELECT COUNT(*) AS totalRows FROM articles $categoryClause";
         $totalRows = $conn->query($sql)->fetch();
         $conn = null;
         

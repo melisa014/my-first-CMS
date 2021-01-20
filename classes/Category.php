@@ -92,7 +92,7 @@ class Category
     //            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
     //	            ORDER BY " .$conn->query($order) . " LIMIT :numRows";
 
-    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
+    $sql = "SELECT * FROM categories
             ORDER BY $order LIMIT :numRows";
 
     $st = $conn->prepare( $sql );
@@ -106,7 +106,7 @@ class Category
     }
 
     // Получаем общее количество категорий, которые соответствуют критериям
-    $sql = "SELECT FOUND_ROWS() AS totalRows";
+    $sql = "SELECT COUNT(*) AS totalRows FROM categories";
     $totalRows = $conn->query( $sql )->fetch();
     $conn = null;
     return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
