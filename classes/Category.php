@@ -83,7 +83,7 @@ class Category
     * @param string Optional Столбец, по которому сортируются категории(по умолчанию = "name ASC")
     * @return Array|false Двух элементный массив: results => массив с объектами Category; totalRows => общее количество категорий
     */
-    public static function getList( $numRows=1000000, $order="name ASC" ) 
+    public static function getList( $numRows=1000000, $order="name ASC", $fromTable = "FROM categories" ) 
     {
     $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
     //	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
@@ -92,7 +92,7 @@ class Category
     //            $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
     //	            ORDER BY " .$conn->query($order) . " LIMIT :numRows";
 
-    $sql = "SELECT * FROM categories
+    $sql = "SELECT * $fromTable
             ORDER BY $order LIMIT :numRows";
 
     $st = $conn->prepare( $sql );
@@ -106,7 +106,7 @@ class Category
     }
 
     // Получаем общее количество категорий, которые соответствуют критериям
-    $sql = "SELECT COUNT(*) AS totalRows FROM categories";
+    $sql = "SELECT COUNT(*) AS totalRows $fromTable";
     $totalRows = $conn->query( $sql )->fetch();
     $conn = null;
     return ( array ( "results" => $list, "totalRows" => $totalRows[0] ) );
