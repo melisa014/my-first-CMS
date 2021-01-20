@@ -142,8 +142,10 @@ class Article
     * @return Array|false Двух элементный массив: results => массив объектов Article; totalRows => общее количество строк
     */
     public static function getList($numRows=1000000, 
-            $categoryId=null, $order="publicationDate DESC", $fromTable = "FROM articles") 
+            $categoryId=null, $order="publicationDate DESC") 
     {
+        $fromTable = "FROM articles";
+        
         $conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
         $categoryClause = $categoryId ? "WHERE categoryId = :categoryId" : "";
         $sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) 

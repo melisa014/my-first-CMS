@@ -83,8 +83,10 @@ class Category
     * @param string Optional Столбец, по которому сортируются категории(по умолчанию = "name ASC")
     * @return Array|false Двух элементный массив: results => массив с объектами Category; totalRows => общее количество категорий
     */
-    public static function getList( $numRows=1000000, $order="name ASC", $fromTable = "FROM categories" ) 
+    public static function getList( $numRows=1000000, $order="name ASC" ) 
     {
+    $fromTable = "FROM categories";    
+        
     $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD);
     //	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM categories
     //	            ORDER BY " . mysql_escape_string($order) . " LIMIT :numRows";
