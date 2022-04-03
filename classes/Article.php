@@ -36,21 +36,6 @@ class Article
     * @var string HTML содержание статьи
     */
     public $content = null;
-    /**
-    * Устанавливаем свойства с помощью значений в заданном массиве
-    *
-    * @param assoc Значения свойств
-    */
-
-    /*
-    public function __construct( $data=array() ) {
-      if ( isset( $data['id'] ) ) {$this->id = (int) $data['id'];}
-      if ( isset( $data['publicationDate'] ) ) {$this->publicationDate = (int) $data['publicationDate'];}
-      if ( isset( $data['title'] ) ) {$this->title = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['title'] );}
-      if ( isset( $data['categoryId'] ) ) {$this->categoryId = (int) $data['categoryId'];}
-      if ( isset( $data['summary'] ) ) {$this->summary = preg_replace ( "/[^\.\,\-\_\'\"\@\?\!\:\$ a-zA-Z0-9()]/", "", $data['summary'] );}
-      if ( isset( $data['content'] ) ) {$this->content = $data['content'];}
-    }*/
     
     /**
      * Создаст объект статьи
@@ -153,20 +138,17 @@ class Article
                 ORDER BY  $order  LIMIT :numRows";
         
         $st = $conn->prepare($sql);
-//                        echo "<pre>";
-//                        print_r($st);
-//                        echo "</pre>";
-//                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $st->bindValue(":numRows", $numRows, PDO::PARAM_INT);
-        
+	/**
+	 * Можно использовать debugDumpParams() для отладки параметров, 
+	 * привязанных выше с помощью bind()
+	 * @see https://www.php.net/manual/ru/pdostatement.debugdumpparams.php
+	 */
+      
         if ($categoryId) 
             $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
         
         $st->execute(); // выполняем запрос к базе данных
-//                        echo "<pre>";
-//                        print_r($st);
-//                        echo "</pre>";
-//                        Здесь $st - текст предполагаемого SQL-запроса, причём переменные не отображаются
         $list = array();
 
         while ($row = $st->fetch()) {
@@ -176,7 +158,11 @@ class Article
 
         // Получаем общее количество статей, которые соответствуют критерию
         $sql = "SELECT COUNT(*) AS totalRows $fromPart $categoryClause";
-        $totalRows = $conn->query($sql)->fetch();
+	$st = $conn->prepare($sql);
+	if ($categoryId) 
+            $st->bindValue( ":categoryId", $categoryId, PDO::PARAM_INT);
+	$st->execute(); // выполняем запрос к базе данных                    
+        $totalRows = $st->fetch();
         $conn = null;
         
         return (array(
@@ -185,12 +171,6 @@ class Article
             ) 
         );
     }
-
-
-    /**
-    * Вставляем текущий объект статьи в базу данных, устанавливаем его свойства.
-    */
-
 
     /**
     * Вставляем текущий объек Article в базу данных, устанавливаем его ID.
